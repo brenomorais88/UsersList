@@ -11,7 +11,6 @@ protocol ViewCodeProtocol {
     func viewCodeSetup()
     func viewCodeHierarchySetup()
     func viewCodeConstraintSetup()
-    func viewCodeThemeSetup()
     func viewCodeAdditioalSetup()
 }
 
@@ -19,7 +18,6 @@ extension ViewCodeProtocol {
     func viewCodeSetup() {
         self.viewCodeHierarchySetup()
         self.viewCodeConstraintSetup()
-        self.viewCodeThemeSetup()
         self.viewCodeAdditioalSetup()
     }
     
@@ -29,10 +27,6 @@ extension ViewCodeProtocol {
     
     func viewCodeConstraintSetup() {
        // needs be override
-    }
-    
-    func viewCodeThemeSetup() {
-        // optional method
     }
     
     func viewCodeAdditioalSetup() {
