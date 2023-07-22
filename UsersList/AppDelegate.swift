@@ -10,8 +10,9 @@ import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+    var window: UIWindow?
+    private var coordinator: UsersListCoordinator?
+    private let navigation = UINavigationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -76,6 +77,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
+    //MARK: start
+    func start() {
+        coordinator = UsersListCoordinator(navigationController: navigation)
+        coordinator?.start()
+        if let nav = coordinator?.navigationController {
+            self.window?.rootViewController = nav
+            window?.makeKeyAndVisible()
+        }
+    }
 }
 
