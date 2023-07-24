@@ -15,4 +15,5 @@ enum Strings: String {
     case kOk = "Ok"
     case kAlert = "Alert"
     case kMoreUsers = "Load more users"
+    case kUsersViewTitle = "Users List"
 }

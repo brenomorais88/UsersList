@@ -11,6 +11,7 @@ import SnapKit
 
 protocol UserListViewProtocol {
     func loadMoreUsers()
+    func showUserInfo(user: UsersList)
 }
 
 class UserListView: UIView {
@@ -91,7 +92,8 @@ extension UserListView: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row == self.users.count {
             self.delegate?.loadMoreUsers()
         } else {
-            
+            let user = self.users[indexPath.row]
+            self.delegate?.showUserInfo(user: user)
         }
     }
 }

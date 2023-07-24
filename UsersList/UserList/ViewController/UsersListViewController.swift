@@ -24,6 +24,7 @@ class UsersListViewController: UIViewController {
         super.viewDidLoad()
         self.loadListener()
         self.viewModel?.loadUsersList()
+        self.title = Strings.kUsersViewTitle.rawValue
     }
     
     private func loadListener() {
@@ -86,6 +87,11 @@ extension UsersListViewController: ErrorViewProtocol {
 }
 
 extension UsersListViewController: UserListViewProtocol {
+    func showUserInfo(user: UsersList) {
+        let vc = UserDetailViewController(user: user)
+        self.present(vc, animated: true)
+    }
+    
     func loadMoreUsers() {
         self.viewModel?.loadNextPage()
     }
