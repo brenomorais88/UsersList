@@ -34,6 +34,7 @@ class UsersListViewModel: ViewModel {
         let users = self.cache.getUsersFromCache()
         if users.count > 0 && Defaults.shared.isValidCache() {
             self.viewState.value = .Data(users)
+            self.page += 1
             
         } else {
             self.loadUsersList()
