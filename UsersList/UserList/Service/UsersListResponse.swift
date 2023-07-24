@@ -30,6 +30,14 @@ struct UsersList: Decodable {
     let lastName: String?
     let avatar: String?
     
+    init(id: Int?, email: String?, firstName: String?, lastName: String?, avatar: String?) {
+        self.id = id
+        self.email = email
+        self.firstName = firstName
+        self.lastName = lastName
+        self.avatar = avatar
+    }
+    
     private enum CodingKeys: String, CodingKey {
         case id = "id"
         case email = "email"

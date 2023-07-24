@@ -28,9 +28,16 @@ class UsersListViewModel: ViewModel {
     var viewState: Observable<UserListViewState> = Observable(.Loading)
     private var users: [UsersList] = []
     private var page: Int = 1
+    private var cache = UsersCache()
     
     func loadUsersList() {
         self.viewState.value = .Loading
+        
+        if !Reachability.isConnectedToNetwork() {
+            tryLoadDataFromCache()
+            return
+        }
+        
         let params = UsersListRequest(page: self.page, delay: 3)
         self.service.getUsersList(params: params) { success, response in
             if success {
@@ -64,5 +71,11 @@ class UsersListViewModel: ViewModel {
     func addUsers(users: [UsersList]) {
         self.users.append(contentsOf: users)
         self.viewState.value = .Data(self.users)
+        self.cache.saveUsersCache(users: self.users)
+    }
+    
+    private func tryLoadDataFromCache() {
+        let users = self.cache.getUsersFromCache()
+        self.viewState.value = .Data(users)
     }
 }
