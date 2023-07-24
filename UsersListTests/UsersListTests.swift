@@ -8,29 +8,102 @@
 import XCTest
 @testable import UsersList
 
-final class UsersListTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+class UsersListServiceProtocolMock: UsersListService {
+    var jsonMock = ""
+    
+    override func getUsersList(params: UsersListRequest, callback: @escaping (Bool, UsersListResponse?) -> ()) {
+        if let responseMock = JSONHandler().readJson(type: UsersListResponse.self, fileName: self.jsonMock) {
+            callback(true, responseMock)
+            
+        } else {
+            callback(false, nil)
         }
     }
-
 }
+
+ class UsersListTests: XCTestCase, UsersListCoordinatorProtocol {
+    
+    var viewModel: UsersListViewModel? = nil
+    let service = UsersListServiceProtocolMock()
+    var users: [UsersList] = []
+    var didCallLoading: Bool = false
+    var didCallEmpty: Bool = false
+    var didCallError: Bool = false
+    var errorMsg: String = ""
+     
+    override func setUp() {
+        
+        self.viewModel = UsersListViewModel(delegate: self, service: service)
+        self.loadListener()
+    }
+     
+     private func loadListener() {
+         viewModel?.viewState.bind({ [weak self] viewState in
+             guard let viewState = viewState else {
+                 return
+             }
+             
+             DispatchQueue.main.async {
+                 switch viewState {
+                 case .Loading:
+                     self?.didCallLoading = true
+                 case .Empty:
+                     self?.didCallEmpty = true
+                 case .Error(let msg):
+                     self?.didCallError = true
+                     self?.errorMsg = msg
+                 case .Data(let users):
+                     self?.users = users
+                 }
+             }
+         })
+     }
+
+    func testClassInitializers() {
+        XCTAssertNotNil(self.viewModel)
+    }
+     
+     func testNormalCase() {
+         self.service.jsonMock = "UsersListJson"
+         self.viewModel?.loadUsersList()
+         
+         let exp = expectation(description: "wait for change view status")
+         let result = XCTWaiter.wait(for: [exp], timeout: 3.0)
+         if result == XCTWaiter.Result.timedOut {
+             XCTAssertTrue(self.didCallLoading)
+             XCTAssertEqual(self.users.count, 6)
+         } else {
+             XCTFail("Fail")
+         }
+     }
+     
+     func testEmptyCase() {
+         self.service.jsonMock = "EmpryUsersListJson"
+         self.viewModel?.loadUsersList()
+         
+         let exp = expectation(description: "wait for change view status")
+         let result = XCTWaiter.wait(for: [exp], timeout: 3.0)
+         if result == XCTWaiter.Result.timedOut {
+             XCTAssertTrue(self.didCallEmpty)
+             XCTAssertEqual(self.users.count, 0)
+         } else {
+             XCTFail("Fail")
+         }
+     }
+     
+     func testErrorCase() {
+         self.service.jsonMock = "ErrorUsersListJson"
+         self.viewModel?.loadUsersList()
+         
+         let exp = expectation(description: "wait for change view status")
+         let result = XCTWaiter.wait(for: [exp], timeout: 3.0)
+         if result == XCTWaiter.Result.timedOut {
+             XCTAssertTrue(self.didCallError)
+             XCTAssertEqual(self.errorMsg, "An error has occurred.\nTry again later.")
+         } else {
+             XCTFail("Fail")
+         }
+     }
+}
+
+
