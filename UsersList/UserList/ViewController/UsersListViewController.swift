@@ -23,6 +23,7 @@ class UsersListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.loadListener()
+        self.viewModel?.loadUsersList()
     }
     
     private func loadListener() {
@@ -37,10 +38,10 @@ class UsersListViewController: UIViewController {
                     self?.setupLoadingView()
                 case .Empty:
                     self?.setupEmptyView()
-                case .Error:
-                    self?.setupErrorView()
-                case .Data:
-                    self?.setupDataView()
+                case .Error(let msg):
+                    self?.setupErrorView(error: msg)
+                case .Data(let users):
+                    self?.setupDataView(users: users)
                 }
             }
         })
@@ -51,15 +52,34 @@ class UsersListViewController: UIViewController {
         self.view = self.currentView
     }
     
-    private func setupErrorView() {
-        
+    private func setupErrorView(error: String) {
+        let errorView = ErrorView(error: error)
+        errorView.delegate = self
+        self.currentView = errorView
+        self.view = self.currentView
+    }
+    
+    private func setupDataView(users: [UsersList]) {
+        let view = UserListView(users: users)
+//        view.delegate = self
+        self.currentView = view
+        self.view = self.currentView
     }
     
     private func setupEmptyView() {
+        let alert = UIAlertController(title: Strings.kAlert.rawValue,
+                                      message: Strings.kNoResultsMessage.rawValue,
+                                      preferredStyle: .alert)
         
+        alert.addAction(UIAlertAction(title: Strings.kOk.rawValue, style: .default, handler: { action in
+            alert.dismiss(animated: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
-    
-    private func setupDataView() {
-        
+}
+
+extension UsersListViewController: ErrorViewProtocol {
+    func tryAgain() {
+        self.viewModel?.loadUsersList()
     }
 }

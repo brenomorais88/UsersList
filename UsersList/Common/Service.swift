@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 class Service {
-    let baseURL: String = "http://webapi.app.br.iron.hostazul.com.br/api/v1"
+    let baseURL: String = "https://reqres.in/api/users?"
     let decoder = JSONDecoder()
     
     let headers: HTTPHeaders = [

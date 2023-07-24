@@ -12,8 +12,10 @@ protocol UsersListCoordinatorProtocol {
 }
 
 class UsersListCoordinator: Coordinator {
+    let service = UsersListService()
     override func didInit() {
-        let viewModel = UsersListViewModel(delegate: self)
+        let viewModel = UsersListViewModel(delegate: self,
+                                           service: self.service)
         self.viewController = UsersListViewController(viewModel: viewModel)
     }
 }
