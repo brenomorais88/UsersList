@@ -95,5 +95,9 @@ extension UsersListViewController: UserListViewProtocol {
     func loadMoreUsers() {
         self.viewModel?.loadNextPage()
     }
+    
+    func reloadData() {
+        self.viewModel?.reloadData()
+    }
 }
 

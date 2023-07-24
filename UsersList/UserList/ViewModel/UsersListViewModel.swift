@@ -58,6 +58,12 @@ class UsersListViewModel: ViewModel {
         }
     }
     
+    func reloadData() {
+        self.page = 1
+        self.users = []
+        self.loadUsersList()
+    }
+    
     func loadNextPage() {
         self.page += 1
         self.loadUsersList()
@@ -76,6 +82,11 @@ class UsersListViewModel: ViewModel {
     
     private func tryLoadDataFromCache() {
         let users = self.cache.getUsersFromCache()
-        self.viewState.value = .Data(users)
+        if users.count > 0 {
+            self.viewState.value = .Data(users)
+            
+        } else {
+            self.viewState.value = .Error(Strings.kEmptyCacheMsg.rawValue)
+        }
     }
 }

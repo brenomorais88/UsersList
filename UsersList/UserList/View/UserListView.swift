@@ -12,6 +12,7 @@ import SnapKit
 protocol UserListViewProtocol {
     func loadMoreUsers()
     func showUserInfo(user: UsersList)
+    func reloadData()
 }
 
 class UserListView: UIView {
@@ -36,6 +37,18 @@ class UserListView: UIView {
     private func setupView() {
         self.backgroundColor = UIColor.white
         self.viewCodeSetup()
+        setupRefreshControll()
+    }
+    
+    private func setupRefreshControll() {
+        let refreshControll = UIRefreshControl()
+        refreshControll.addTarget(self, action: #selector(reloadData), for: .valueChanged)
+        self.usersTable.refreshControl = refreshControll
+    }
+    
+    @objc private func reloadData(refreshControl: UIRefreshControl) {
+        self.delegate?.reloadData()
+        refreshControl.endRefreshing()
     }
 }
 
