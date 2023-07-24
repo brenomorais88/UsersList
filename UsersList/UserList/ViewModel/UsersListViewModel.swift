@@ -30,6 +30,16 @@ class UsersListViewModel: ViewModel {
     private var page: Int = 1
     private var cache = UsersCache()
     
+    func loadData() {
+        let users = self.cache.getUsersFromCache()
+        if users.count > 0 && Defaults.shared.isValidCache() {
+            self.viewState.value = .Data(users)
+            
+        } else {
+            self.loadUsersList()
+        }
+    }
+    
     func loadUsersList() {
         self.viewState.value = .Loading
         

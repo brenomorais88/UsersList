@@ -34,6 +34,7 @@ class UsersCache {
                 print("Error saving")
             }
         }
+        Defaults.shared.saveCacheDate()
     }
     
     private func clearLastData() {

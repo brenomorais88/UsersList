@@ -23,7 +23,7 @@ class UsersListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.loadListener()
-        self.viewModel?.loadUsersList()
+        self.viewModel?.loadData()
         self.title = Strings.kUsersViewTitle.rawValue
     }
     
