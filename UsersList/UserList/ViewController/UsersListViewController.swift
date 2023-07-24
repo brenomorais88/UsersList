@@ -61,7 +61,7 @@ class UsersListViewController: UIViewController {
     
     private func setupDataView(users: [UsersList]) {
         let view = UserListView(users: users)
-//        view.delegate = self
+        view.delegate = self
         self.currentView = view
         self.view = self.currentView
     }
@@ -73,6 +73,7 @@ class UsersListViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: Strings.kOk.rawValue, style: .default, handler: { action in
             alert.dismiss(animated: true)
+            self.viewModel?.pageLoadedWithoutResults()
         }))
         self.present(alert, animated: true, completion: nil)
     }
@@ -83,3 +84,10 @@ extension UsersListViewController: ErrorViewProtocol {
         self.viewModel?.loadUsersList()
     }
 }
+
+extension UsersListViewController: UserListViewProtocol {
+    func loadMoreUsers() {
+        self.viewModel?.loadNextPage()
+    }
+}
+

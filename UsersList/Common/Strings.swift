@@ -14,4 +14,5 @@ enum Strings: String {
     case kNoResultsMessage = "no results found"
     case kOk = "Ok"
     case kAlert = "Alert"
+    case kMoreUsers = "Load more users"
 }

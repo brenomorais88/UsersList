@@ -27,10 +27,11 @@ class UsersListViewModel: ViewModel {
     
     var viewState: Observable<UserListViewState> = Observable(.Loading)
     private var users: [UsersList] = []
+    private var page: Int = 1
     
     func loadUsersList() {
         self.viewState.value = .Loading
-        let params = UsersListRequest(page: 1, delay: 3)
+        let params = UsersListRequest(page: self.page, delay: 3)
         self.service.getUsersList(params: params) { success, response in
             if success {
                 guard let list = response?.users else {
@@ -48,6 +49,16 @@ class UsersListViewModel: ViewModel {
                 self.viewState.value = .Error(Strings.kErrorMessage.rawValue)
             }
         }
+    }
+    
+    func loadNextPage() {
+        self.page += 1
+        self.loadUsersList()
+    }
+    
+    func pageLoadedWithoutResults() {
+        self.page -= 1
+        self.viewState.value = .Data(self.users)
     }
     
     func addUsers(users: [UsersList]) {

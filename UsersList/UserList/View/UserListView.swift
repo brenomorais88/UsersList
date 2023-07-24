@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import SnapKit
 
+protocol UserListViewProtocol {
+    func loadMoreUsers()
+}
+
 class UserListView: UIView {
     private let usersTable: UITableView = {
         let tableView = UITableView()
@@ -16,6 +20,7 @@ class UserListView: UIView {
     }()
     
     private let users: [UsersList]
+    var delegate: UserListViewProtocol? = nil
     
     init(users: [UsersList]) {
         self.users = users
@@ -47,6 +52,8 @@ extension UserListView: ViewCodeProtocol {
     func viewCodeAdditioalSetup() {
         self.usersTable.delegate = self
         self.usersTable.dataSource = self
+        self.usersTable.register(MoreUsersCell.self,
+                              forCellReuseIdentifier: MoreUsersCell.cellID)
         self.usersTable.register(UsersCell.self,
                               forCellReuseIdentifier: UsersCell.cellID)
         self.usersTable.reloadData()
@@ -55,15 +62,23 @@ extension UserListView: ViewCodeProtocol {
 
 extension UserListView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.users.count
+        self.users.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: UsersCell.cellID,
-                                                    for: indexPath) as? UsersCell {
-            let user = self.users[indexPath.row]
-            cell.setup(user: user)
-            return cell
+        if indexPath.row == self.users.count {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: MoreUsersCell.cellID,
+                                                        for: indexPath) as? MoreUsersCell {
+                return cell
+            }
+            
+        } else {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: UsersCell.cellID,
+                                                        for: indexPath) as? UsersCell {
+                let user = self.users[indexPath.row]
+                cell.setup(user: user)
+                return cell
+            }
         }
         return UITableViewCell()
     }
@@ -73,8 +88,11 @@ extension UserListView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = self.users[indexPath.row]
-        print(user.lastName)
+        if indexPath.row == self.users.count {
+            self.delegate?.loadMoreUsers()
+        } else {
+            
+        }
     }
 }
 
