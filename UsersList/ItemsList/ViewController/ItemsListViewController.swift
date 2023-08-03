@@ -131,8 +131,8 @@ extension ItemsListViewController: ViewCodeProtocol {
     func viewCodeHierarchySetup() {
         self.view.addSubview(newItemField)
         self.view.addSubview(contentView)
-        self.view.addSubview(completionTable)
         self.view.addSubview(tableHeaderLabel)
+        self.view.addSubview(completionTable)
     }
     
     func viewCodeConstraintSetup() {
