@@ -16,5 +16,6 @@ enum Strings: String {
     case kAlert = "Alert"
     case kMoreUsers = "Load more users"
     case kUsersViewTitle = "Users List"
+    case kItensViewTitle = "Itens List"
     case kEmptyCacheMsg = "Internet connection unavailable.\nWe tried to recover the data from the last session but it was not possible."
 }
