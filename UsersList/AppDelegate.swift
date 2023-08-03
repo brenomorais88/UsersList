@@ -11,7 +11,7 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    private var coordinator: UsersListCoordinator?
+    private var coordinator: ItemsListCoordinator?
     private let navigation = UINavigationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -80,7 +80,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //MARK: start
     func start() {
-        coordinator = UsersListCoordinator(navigationController: navigation)
+//        coordinator = UsersListCoordinator(navigationController: navigation)
+//        coordinator?.start()
+//        if let nav = coordinator?.navigationController {
+//            self.window?.rootViewController = nav
+//            window?.makeKeyAndVisible()
+//        }
+        
+        coordinator = ItemsListCoordinator(navigationController: navigation)
         coordinator?.start()
         if let nav = coordinator?.navigationController {
             self.window?.rootViewController = nav
